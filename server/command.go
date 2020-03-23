@@ -66,6 +66,9 @@ func (p *Plugin) ExecuteCommand(c *plugin.Context, args *model.CommandArgs) (*mo
 		}
 	}
 
-	p.postBotResponse(args, strings.Join(spongemock, ""))
-	return &model.CommandResponse{}, nil
+	//p.postBotResponse(args, strings.Join(spongemock, ""))
+	return &model.CommandResponse{
+		ResponseType: model.COMMAND_RESPONSE_TYPE_IN_CHANNEL,
+		Text:         strings.Join(spongemock, ""),
+	}, nil
 }
