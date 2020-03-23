@@ -1,0 +1,25 @@
+{
+    "id": "spongemock",
+    "name": "SpongeMock",
+    "description": "The SpongeMock plugin for Mattermost allows users to input a phrase/word and get a Spongebob mocked phrase/word in return.",
+    "version": "1.0.0",
+    "min_server_version": "5.12.0",
+    "server": {
+        "executables": {
+            "linux-amd64": "server/dist/plugin-linux-amd64",
+            "darwin-amd64": "server/dist/plugin-darwin-amd64",
+            "windows-amd64": "server/dist/plugin-windows-amd64.exe"
+        }
+    },
+    "webapp": {
+        "bundle_path": "webapp/dist/main.js"
+    },
+    "settings_schema": {
+        "header": "The SpongeMock plugin for Mattermost allows users to input a phrase/word and get a Spongebob mocked phrase/word in return.",
+        "settings": [
+            {
+            }           
+        ],
+        "footer": "* To report an issue, make a suggestion, or contribe, check the [repo](https://github.com/incidrthreat/mattermost-plugin-spongemock)."
+    }
+}
