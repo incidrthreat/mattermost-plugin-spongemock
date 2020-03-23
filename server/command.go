@@ -45,7 +45,10 @@ func (p *Plugin) postBotResponse(args *model.CommandArgs, text string) {
 
 // ExecuteCommand ...
 func (p *Plugin) ExecuteCommand(c *plugin.Context, args *model.CommandArgs) (*model.CommandResponse, *model.AppError) {
-	phrase := strings.TrimLeft(args.Command, "/spongemock ")
+	// remove slash command syntax
+	phrase := strings.TrimLeft(args.Command, "/spongemock")
+	// remove leading and trailing white space
+	phrase = strings.TrimSpace(phrase)
 
 	// Displays the help menu
 	if phrase == "help" {
