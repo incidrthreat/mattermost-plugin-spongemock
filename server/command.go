@@ -45,7 +45,7 @@ func (p *Plugin) postBotResponse(args *model.CommandArgs, text string) {
 
 // ExecuteCommand ...
 func (p *Plugin) ExecuteCommand(c *plugin.Context, args *model.CommandArgs) (*model.CommandResponse, *model.AppError) {
-	phrase := strings.TrimLeft(strings.TrimRight(args.Command, "\""), "/spongemock \"")
+	phrase := strings.TrimLeft(args.Command, "/spongemock ")
 
 	// Displays the help menu
 	if phrase == "help" {
