@@ -34,15 +34,6 @@ func (p *Plugin) postCommandResponse(args *model.CommandArgs, text string) {
 	_ = p.API.SendEphemeralPost(args.UserId, post)
 }
 
-func (p *Plugin) postBotResponse(args *model.CommandArgs, text string) {
-	post := &model.Post{
-		UserId:    p.BotUserID,
-		ChannelId: args.ChannelId,
-		Message:   text,
-	}
-	_, _ = p.API.CreatePost(post)
-}
-
 // ExecuteCommand ...
 func (p *Plugin) ExecuteCommand(c *plugin.Context, args *model.CommandArgs) (*model.CommandResponse, *model.AppError) {
 	// remove slash command syntax
