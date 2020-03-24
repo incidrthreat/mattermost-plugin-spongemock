@@ -10,9 +10,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Code refactor to simplify the plugin
     - quicker build time and smaller binaries
-    
+
+### Removed
+- server/command.go
+- server/configuration.go
+- server/main.go
+
 ## [1.0.1] - 2020-03-23
-### Added
+### Removed
 - removed bot response for /spongemock commands
 
 ## [1.0.0] - 2020-03-22
