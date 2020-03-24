@@ -1,70 +1,64 @@
 package main
 
 import (
-	"io/ioutil"
-	"path/filepath"
-	"sync"
+	"strings"
 
 	"github.com/mattermost/mattermost-server/model"
 	"github.com/mattermost/mattermost-server/plugin"
-	"github.com/pkg/errors"
 )
 
 // Plugin implements the interface expected by the Mattermost server to communicate between the server and plugin processes.
 type Plugin struct {
 	plugin.MattermostPlugin
-
-	// configurationLock synchronizes access to the configuration.
-	configurationLock sync.RWMutex
-
-	// configuration is the active plugin configuration. Consult getConfiguration and
-	// setConfiguration for usage.
-	configuration *configuration
-
-	BotUserID string
 }
 
 // See https://developers.mattermost.com/extend/plugins/server/reference/
 
 // OnActivate checks if the configurations is valid and ensures the bot account exists
 func (p *Plugin) OnActivate() error {
-	config := p.getConfiguration()
-
-	if err := config.IsValid(); err != nil {
-		return err
-	}
-	p.API.RegisterCommand(getCommand())
-
-	BotUserID, err := p.Helpers.EnsureBot(&model.Bot{
-		Username:    "spongemock",
-		DisplayName: "sPoNgEmOcK",
-		Description: "Created by incidrthreat",
+	return p.API.RegisterCommand(&model.Command{
+		Trigger:          "spongemock",
+		AutoComplete:     true,
+		AutoCompleteDesc: "Gimmie a phrase to mock",
 	})
-	if err != nil {
-		return errors.Wrap(err, "failed to ensure spongemock bot")
-	}
-	p.BotUserID = BotUserID
-
-	bundlePath, err := p.API.GetBundlePath()
-	if err != nil {
-		return errors.Wrap(err, "couldn't get bundle path")
-	}
-
-	if err = p.API.RegisterCommand(getCommand()); err != nil {
-		return errors.WithMessage(err, "OnActivate: failed to register command")
-	}
-
-	profileImage, err := ioutil.ReadFile(filepath.Join(bundlePath, "assets", "profile.png"))
-	if err != nil {
-		return errors.Wrap(err, "couldn't read profile image")
-	}
-
-	appErr := p.API.SetProfileImage(BotUserID, profileImage)
-	if appErr != nil {
-		return errors.Wrap(appErr, "couldn't set profile image")
-	}
-
-	return nil
 }
 
-// See https://developers.mattermost.com/extend/plugins/server/reference/
+// CommandHelp displays command info
+const CommandHelp = "## **_Mattermost SpongeMock Plugin - cOmMaNd HeLp_**\n" +
+	"#### Basic Usage:\n" +
+	"* |/spongemock <input>| - Takes in a input and returns a Spongebob mocked output.\n" +
+	"    * |/spongemock this is a test| will return |tHiS Is a tEsT|"
+
+// ExecuteCommand ...
+func (p *Plugin) ExecuteCommand(c *plugin.Context, args *model.CommandArgs) (*model.CommandResponse, *model.AppError) {
+	// remove leading and trailing white space and removes slash command syntax from input
+	input := strings.TrimSpace(strings.TrimPrefix(args.Command, "/spongemock"))
+
+	// Displays the help menu
+	if input == "help" || input == "" {
+		text := strings.Replace(CommandHelp, "|", "`", -1)
+		return &model.CommandResponse{
+			ResponseType: model.COMMAND_RESPONSE_TYPE_EPHEMERAL,
+			Text:         text,
+		}, nil
+	}
+
+	spongemock := []string{}
+	for i, c := range input {
+		if i%2 != 0 {
+			spongemock = append(spongemock, strings.ToUpper(string(c)))
+		} else {
+			spongemock = append(spongemock, strings.ToLower(string(c)))
+		}
+	}
+
+	//p.postBotResponse(args, strings.Join(spongemock, ""))
+	return &model.CommandResponse{
+		ResponseType: model.COMMAND_RESPONSE_TYPE_IN_CHANNEL,
+		Text:         strings.Join(spongemock, ""),
+	}, nil
+}
+
+func main() {
+	plugin.ClientMain(&Plugin{})
+}

@@ -7,5 +7,5 @@ var manifest = struct {
 	Version string
 }{
 	ID:      "com.mattermost.plugin-spongemock",
-	Version: "1.0.1",
+	Version: "1.0.2",
 }
