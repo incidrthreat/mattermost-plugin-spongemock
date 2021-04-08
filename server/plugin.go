@@ -2,6 +2,7 @@ package main
 
 import (
 	"strings"
+	"unicode"
 
 	"github.com/mattermost/mattermost-server/model"
 	"github.com/mattermost/mattermost-server/plugin"
@@ -43,12 +44,20 @@ func (p *Plugin) ExecuteCommand(c *plugin.Context, args *model.CommandArgs) (*mo
 		}, nil
 	}
 
+	upper := true
 	spongemock := []string{}
-	for i, c := range input {
-		if i%2 != 0 {
-			spongemock = append(spongemock, strings.ToUpper(string(c)))
+	for _, c := range input {
+		if unicode.IsLetter(c) {
+			if upper {
+				spongemock = append(spongemock, strings.ToUpper(string(c)))
+				upper = false
+			} else {
+				spongemock = append(spongemock, strings.ToLower(string(c)))
+				upper = true
+			}
+
 		} else {
-			spongemock = append(spongemock, strings.ToLower(string(c)))
+			spongemock = append(spongemock, string(c))
 		}
 	}
 
