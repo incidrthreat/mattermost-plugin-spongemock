@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.0.4] - 2021-04-07
+### Edited plugin.json
+- Changed version to 1.0.4
+### Updated
+- server/plugin.go
+
 ## [1.0.3] - 2020-04-18
 ### Edited plugin.json
 - Changed version to 1.0.3
